@@ -1,0 +1,465 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import warnings
+warnings.filterwarnings('ignore')
+from google.colab import files
+
+uploded = files.upload()
+
+Drugs = pd.read_csv('Drug_ConsumptionProject.csv')
+#Data inspection and cleaning 
+Drugs.columns = ['ID','Age (Real)','Gender (Real)','Education (Real)','Country (Real)','Ethnicity (Real)','Nscore (Real)','Escore (Real)','Oscore (Real)','Ascore (Real)','Cscore (Real)','Impulsive (Real)','SS (Real)','Alcohol','Amphet','Amyl','Benzos','Caff','Cannabis','Choc','Coke','Crack','Ecstasy','Heroin','Ketamine','Legalh','LSD','Meth','Mushrooms','Nicotine','Semer','VSA']
+Drugs.info()
+Drugs.drop('ID',axis=1,inplace=True)
+Drugs.head()
+temp = Drugs.columns
+temp = temp[12:]
+for i in temp:
+    Drugs[i] = Drugs[i].map({'CL0':0,'CL1':1,'CL2':2,'CL3':3,'CL4':4,'CL5':5,'CL6':6})
+    Drugs.head()
+    Drugs.info()
+    #EDA
+    plt.figure(figsize=(20,15))
+sns.heatmap(Drugs.drop(['Age (Real)','Gender (Real)','Education (Real)','Country (Real)','Ethnicity (Real)'],axis=1).corr(),annot=True)
+plt.title('Heatmap of Variable Correlations')
+plt.show()
+#As we can see an Openess to experience has higher correlations with drug us. 
+#Conscientiousness has mostly negative coreelations with most drug use as expected. 
+#The next highest persona trait that has correlations with drug use on a broad scale is Neuroticism. 
+#Implusiveness and Sensation seeing are also high predictors of drug use. 
+
+#Neurotics have correlations with the drugs benzos and meth.
+#Openess has high correlations with cannabis, LSD and mushrooms. 
+#Conscientiousness has the lowest negative correlations with Achohol and chocolate and highest negative correlations 
+#with Cannabis, amphet, legal highs and Nicotine. 
+
+#Between the drugs themseves there are correlations. 
+#High correlations of LSD with mushrooms, coke and ecstasy, mushrooms and cannabis. 
+plt.figure(figsize=(20,15))
+sns.heatmap(Drugs.drop(['Nscore (Real)','Escore (Real)','Oscore (Real)','Ascore (Real)','Cscore (Real)','Impulsive (Real)','SS (Real)'],axis=1).corr(),annot=True)
+plt.title('Heatmap of Variable Correlations')
+plt.show()
+#Age has high negative correlations with legal highs, cannabis and ecstasy. 
+#Gender(male<female) has negative correlations with most drug use especially legal highs and cannabis. 
+#Education has 1 positive correlation with achohol and negative correlations with cannabis and nicotine. 
+
+#These were the only ordered categorical variables present. 
+#Plotting only a correlation heatmap since the vairables have been scaled and hence nothing can be intepreted from the plots 
+#except correlations. 
+#Now working on the un quantified data. 
+from google.colab import files
+
+uploded = files.upload()
+
+Drugs = pd.read_csv('Drug_ConsumptionProject.csv')
+#Data inspection and cleaning 
+Drugs.drop('ID',axis=1,inplace=True)
+Drugs.info()
+#Converting the 'CL' categorical variables into a cumulative probability of regular use based on most recent case of use. 
+#This might help model building.
+temp = Drugs.columns
+temp = temp[12:]
+for i in temp:
+    Drugs[i] = Drugs[i].map({'CL0':0,'CL1':1/6,'CL2':2/6,'CL3':3/6,'CL4':4/6,'CL5':5/6,'CL6':6/6})
+    Drugs.info()
+#EDA
+plt.figure(figsize=(20,15))
+sns.lineplot(Drugs.Age, Drugs.Alcohol, label='Alcohol')
+sns.lineplot(Drugs.Age, Drugs.Amphet, label='Amphet')
+sns.lineplot(Drugs.Age, Drugs.Amyl, label='Amyl')
+sns.lineplot(Drugs.Age, Drugs.Benzos, label='Benzos')
+sns.lineplot(Drugs.Age, Drugs.Caff, label='Caff')
+sns.lineplot(Drugs.Age, Drugs.Cannabis, label='Cannabis')
+sns.lineplot(Drugs.Age, Drugs.Choc, label='Choc')
+sns.lineplot(Drugs.Age, Drugs.Coke, label='Coke')
+sns.lineplot(Drugs.Age, Drugs.Crack, label='Crack')
+sns.lineplot(Drugs.Age, Drugs.Ecstasy, label='Ecstasy')
+sns.lineplot(Drugs.Age, Drugs.Heroin, label='Heroin')
+sns.lineplot(Drugs.Age, Drugs.Ketamine, label='Ketamine')
+sns.lineplot(Drugs.Age, Drugs.Legalh, label='Legalh')
+sns.lineplot(Drugs.Age, Drugs.LSD, label='LSD')
+sns.lineplot(Drugs.Age, Drugs.Meth, label='Meth')
+sns.lineplot(Drugs.Age, Drugs.Mushrooms, label='Mushrooms')
+sns.lineplot(Drugs.Age, Drugs.Nicotine, label='Nicotine')
+sns.lineplot(Drugs.Age, Drugs.Semer, label='Semer')
+sns.lineplot(Drugs.Age, Drugs.VSA, label='VSA')
+plt.legend(loc='upper left')
+plt.title('Drugs vs Age')
+plt.xlabel('Age')
+plt.ylabel('Drugs')
+plt.show()
+plt.figure(figsize=(20,15))
+sns.lineplot(Drugs.Gender, Drugs.Alcohol, label='Alcohol')
+sns.lineplot(Drugs.Gender, Drugs.Amphet, label='Amphet')
+sns.lineplot(Drugs.Gender, Drugs.Amyl, label='Amyl')
+sns.lineplot(Drugs.Gender, Drugs.Benzos, label='Benzos')
+sns.lineplot(Drugs.Gender, Drugs.Caff, label='Caff')
+sns.lineplot(Drugs.Gender, Drugs.Cannabis, label='Cannabis')
+sns.lineplot(Drugs.Gender, Drugs.Choc, label='Choc')
+sns.lineplot(Drugs.Gender, Drugs.Coke, label='Coke')
+sns.lineplot(Drugs.Gender, Drugs.Crack, label='Crack')
+sns.lineplot(Drugs.Gender, Drugs.Ecstasy, label='Ecstasy')
+sns.lineplot(Drugs.Gender, Drugs.Heroin, label='Heroin')
+sns.lineplot(Drugs.Gender, Drugs.Ketamine, label='Ketamine')
+sns.lineplot(Drugs.Gender, Drugs.Legalh, label='Legalh')
+sns.lineplot(Drugs.Gender, Drugs.LSD, label='LSD')
+sns.lineplot(Drugs.Gender, Drugs.Meth, label='Meth')
+sns.lineplot(Drugs.Gender, Drugs.Mushrooms, label='Mushrooms')
+sns.lineplot(Drugs.Gender, Drugs.Nicotine, label='Nicotine')
+sns.lineplot(Drugs.Gender, Drugs.Semer, label='Semer')
+sns.lineplot(Drugs.Gender, Drugs.VSA, label='VSA')
+plt.legend(loc='upper left')
+plt.title('Drugs vs Gender')
+plt.xlabel('Gender')
+plt.ylabel('Drugs')
+plt.show()
+plt.figure(figsize=(20,15))
+sns.lineplot(Drugs.Ethnicity, Drugs.Alcohol, label='Alcohol')
+sns.lineplot(Drugs.Ethnicity, Drugs.Amphet, label='Amphet')
+sns.lineplot(Drugs.Ethnicity, Drugs.Amyl, label='Amyl')
+sns.lineplot(Drugs.Ethnicity, Drugs.Benzos, label='Benzos')
+sns.lineplot(Drugs.Ethnicity, Drugs.Caff, label='Caff')
+sns.lineplot(Drugs.Ethnicity, Drugs.Cannabis, label='Cannabis')
+sns.lineplot(Drugs.Ethnicity, Drugs.Choc, label='Choc')
+sns.lineplot(Drugs.Ethnicity, Drugs.Coke, label='Coke')
+sns.lineplot(Drugs.Ethnicity, Drugs.Crack, label='Crack')
+sns.lineplot(Drugs.Ethnicity, Drugs.Ecstasy, label='Ecstasy')
+sns.lineplot(Drugs.Ethnicity, Drugs.Heroin, label='Heroin')
+sns.lineplot(Drugs.Ethnicity, Drugs.Ketamine, label='Ketamine')
+sns.lineplot(Drugs.Ethnicity, Drugs.Legalh, label='Legalh')
+sns.lineplot(Drugs.Ethnicity, Drugs.LSD, label='LSD')
+sns.lineplot(Drugs.Ethnicity, Drugs.Meth, label='Meth')
+sns.lineplot(Drugs.Ethnicity, Drugs.Mushrooms, label='Mushrooms')
+sns.lineplot(Drugs.Ethnicity, Drugs.Nicotine, label='Nicotine')
+sns.lineplot(Drugs.Ethnicity, Drugs.Semer, label='Semer')
+sns.lineplot(Drugs.Ethnicity, Drugs.VSA, label='VSA')
+plt.legend(loc='upper left')
+plt.title('Drugs vs Ethnicity')
+plt.xlabel('Ethnicity')
+plt.ylabel('Drugs')
+plt.show()
+#As we can see these plots are very chaotic and nothing of importance can be obtained from them. 
+Drugs['Education'].value_counts()
+Drugs['Age'] = Drugs['Age'].map({'18-24':1,'25-34':2,'35-44':3,'45-54':4,'55-64':5,'65+':6})
+Drugs['Gender'] = Drugs['Gender'].map({'M':1,'F':0})
+Drugs['Education'] = Drugs['Education'].map({'Left school before 16 years':1,'Left school at 16 years':2,'Left school at 17 years':3,'Left school at 18 years':4,'Some college or university, no certificate or degree':5,'Professional certificate/ diploma':6,'University degree':7,'Masters degree':8,'Doctorate degree':9})
+plt.figure(figsize=(20,15))
+sns.lineplot(Drugs.Education, Drugs.Alcohol, label='Alcohol')
+sns.lineplot(Drugs.Education, Drugs.Amphet, label='Amphet')
+sns.lineplot(Drugs.Education, Drugs.Amyl, label='Amyl')
+sns.lineplot(Drugs.Education, Drugs.Benzos, label='Benzos')
+sns.lineplot(Drugs.Education, Drugs.Caff, label='Caff')
+sns.lineplot(Drugs.Education, Drugs.Cannabis, label='Cannabis')
+sns.lineplot(Drugs.Education, Drugs.Choc, label='Choc')
+sns.lineplot(Drugs.Education, Drugs.Coke, label='Coke')
+sns.lineplot(Drugs.Education, Drugs.Crack, label='Crack')
+sns.lineplot(Drugs.Education, Drugs.Ecstasy, label='Ecstasy')
+sns.lineplot(Drugs.Education, Drugs.Heroin, label='Heroin')
+sns.lineplot(Drugs.Education, Drugs.Ketamine, label='Ketamine')
+sns.lineplot(Drugs.Education, Drugs.Legalh, label='Legalh')
+sns.lineplot(Drugs.Education, Drugs.LSD, label='LSD')
+sns.lineplot(Drugs.Education, Drugs.Meth, label='Meth')
+sns.lineplot(Drugs.Education, Drugs.Mushrooms, label='Mushrooms')
+sns.lineplot(Drugs.Education, Drugs.Nicotine, label='Nicotine')
+sns.lineplot(Drugs.Education, Drugs.Semer, label='Semer')
+sns.lineplot(Drugs.Education, Drugs.VSA, label='VSA')
+plt.legend(loc='upper left')
+plt.title('Drugs vs Education')
+plt.xlabel('Education')
+plt.ylabel('Drugs')
+plt.show()
+plt.figure(figsize=(20,15))
+sns.lineplot(Drugs.Country, Drugs.Alcohol, label='Alcohol')
+sns.lineplot(Drugs.Country, Drugs.Amphet, label='Amphet')
+sns.lineplot(Drugs.Country, Drugs.Amyl, label='Amyl')
+sns.lineplot(Drugs.Country, Drugs.Benzos, label='Benzos')
+sns.lineplot(Drugs.Country, Drugs.Caff, label='Caff')
+sns.lineplot(Drugs.Country, Drugs.Cannabis, label='Cannabis')
+sns.lineplot(Drugs.Country, Drugs.Choc, label='Choc')
+sns.lineplot(Drugs.Country, Drugs.Coke, label='Coke')
+sns.lineplot(Drugs.Country, Drugs.Crack, label='Crack')
+sns.lineplot(Drugs.Country, Drugs.Ecstasy, label='Ecstasy')
+sns.lineplot(Drugs.Country, Drugs.Heroin, label='Heroin')
+sns.lineplot(Drugs.Country, Drugs.Ketamine, label='Ketamine')
+sns.lineplot(Drugs.Country, Drugs.Legalh, label='Legalh')
+sns.lineplot(Drugs.Country, Drugs.LSD, label='LSD')
+sns.lineplot(Drugs.Country, Drugs.Meth, label='Meth')
+sns.lineplot(Drugs.Country, Drugs.Mushrooms, label='Mushrooms')
+sns.lineplot(Drugs.Country, Drugs.Nicotine, label='Nicotine')
+sns.lineplot(Drugs.Country, Drugs.Semer, label='Semer')
+sns.lineplot(Drugs.Country, Drugs.VSA, label='VSA')
+plt.legend(loc='upper left')
+plt.title('Drugs vs Country')
+plt.xlabel('Country')
+plt.ylabel('Drugs')
+plt.show()
+drugs = list(Drugs.columns)[12:31]
+len(drugs)
+plt.figure(figsize=(15,10))
+sns.heatmap(Drugs[drugs].corr(),annot=True)
+plt.title('Heatmap of Drug variable Correlations')
+plt.show()
+#Model building
+#We will be building different models for difference drugs types using the same set of independent variables. 
+#First we will convert the probability based target variables into categorical variables by binning them into 2 categories. 
+#Have tried using regression model to model the probablistic data earlier and was not sucessfull. 
+Drugs[drugs].describe()
+Drugs_Prediction = Drugs.copy()
+drugs.remove('Semer')
+for i in drugs:
+    Drugs_Prediction[i] = Drugs_Prediction[i].apply(lambda x: 1 if x>=0.833 else 0)
+drugs = drugs+['Semer']
+Drugs_Prediction['Semer'] = Drugs_Prediction['Semer'].apply(lambda x: 1 if x>=0.5 else 0)
+Drugs_Prediction[drugs].head()
+len(drugs)
+#We have chosen a cutoff of 0.66 as corresponding the having done the drug in the last week. For the drug Semer however we have 
+#choosen a cutoff of 0.5 since the highest values in that variable are very low. 
+Drugs_Prediction.head()
+Drugs_Prediction.info()
+
+Drugs_Prediction['Ethnicity'].value_counts()
+#Not dropping the first variable when creating dummies since I want to be able to check all the variable importances.
+temp = pd.get_dummies(Drugs_Prediction['Country'],drop_first=False)
+Drugs_Prediction = pd.concat([Drugs_Prediction,temp],axis=1)
+Drugs_Prediction.drop('Country',axis=1,inplace=True)
+
+temp = pd.get_dummies(Drugs_Prediction['Ethnicity'],drop_first=False)
+Drugs_Prediction = pd.concat([Drugs_Prediction,temp],axis=1)
+Drugs_Prediction.drop('Ethnicity',axis=1,inplace=True)
+Drugs_Prediction.head()
+Drugs_Prediction.info(verbose=True)
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score
+Scoring = pd.DataFrame(columns=['Drug','Train_score','Test_score'])
+Feature_importance = pd.DataFrame(columns=['Feature'])
+def build_model(drug):
+    X = Drugs_Prediction.drop(drugs,axis=1)
+    y = Drugs_Prediction[drug]
+    X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8,random_state=100)
+    
+    Model = RandomForestClassifier(random_state=100,n_jobs=-1,class_weight='balanced')
+    
+    params = {'n_estimators':[200],
+          'min_samples_leaf':[10,30,50,70,90],
+          'max_depth':[5,10,15,20,25,30],
+          'max_features':[0.1,0.2,0.3,0.4,0.5,0.6]}
+    
+    grid_search = GridSearchCV(estimator=Model,param_grid=params,n_jobs=-1,verbose=1,scoring='accuracy')
+    grid_search.fit(X_train,y_train)
+    
+    Model_best = grid_search.best_estimator_
+    
+    y_train_pred = Model_best.predict(X_train)
+    y_test_pred = Model_best.predict(X_test)
+    
+    print('Train_score'+' '+'='+' '+str(accuracy_score(y_train,y_train_pred)))
+    print('Test_score'+' '+'='+' '+str(accuracy_score(y_test,y_test_pred)))
+    
+    Feature_importance['Feature'] = X_train.columns
+    Feature_importance['Importance_'+drug] = Model_best.feature_importances_
+    for drug in drugs:
+    build_model(drug)
+    Feature_importance.set_index('Feature',inplace=True)
+Feature_importance.head()
+plt.figure(figsize=(15,10))
+sns.heatmap(Feature_importance,annot=True)
+plt.title('Heatmap of Feature Importances')
+plt.show()
+#As we can see the R-squared scores for most of the drug models are pretty bad. Hence we will now try Gradient Boosting
+from sklearn.ensemble import GradientBoostingClassifier
+Scoring = pd.DataFrame(columns=['Drug','Train_score','Test_score'])
+Feature_importance = pd.DataFrame(columns=['Feature'])
+def build_model(drug):
+    X = Drugs_Prediction.drop(drugs,axis=1)
+    y = Drugs_Prediction[drug]
+    X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8,random_state=100)
+    
+    Model = GradientBoostingClassifier(random_state=100)
+    
+    params = {'learning_rate':[0.1,0.2,0.3,0.4,0.5],
+          'min_samples_leaf':[10,30,50,70,90],
+          'max_depth':[5,10,15,20,25,30],
+          'max_features':[0.1,0.2,0.3,0.4,0.5,0.6]}
+    
+    grid_search = GridSearchCV(estimator=Model,param_grid=params,n_jobs=-1,verbose=1,scoring='accuracy')
+    grid_search.fit(X_train,y_train)
+    
+    Model_best = grid_search.best_estimator_
+    
+    y_train_pred = Model_best.predict(X_train)
+    y_test_pred = Model_best.predict(X_test)
+    
+    print('Train_score'+' '+'='+' '+str(accuracy_score(y_train,y_train_pred)))
+    print('Test_score'+' '+'='+' '+str(accuracy_score(y_test,y_test_pred)))
+    
+    Feature_importance['Feature'] = X_train.columns
+    Feature_importance['Importance_'+drug] = Model_best.feature_importances_
+    for drug in drugs:
+    build_model(drug)
+    Feature_importance.set_index('Feature',inplace=True)
+Feature_importance.head()
+plt.figure(figsize=(15,10))
+sns.heatmap(Feature_importance,annot=True)
+plt.title('Heatmap of Feature Importances')
+plt.show()
+#There arent too many improvements using gradient boosting. 
+#We will now try to cluster the drugs based on their correlations with the Personality score variables. 
+Drugs.head()
+temp = pd.get_dummies(Drugs['Country'],drop_first=False)
+Drugs = pd.concat([Drugs,temp],axis=1)
+Drugs.drop('Country',axis=1,inplace=True)
+
+temp = pd.get_dummies(Drugs['Ethnicity'],drop_first=False)
+Drugs = pd.concat([Drugs,temp],axis=1)
+Drugs.drop('Ethnicity',axis=1,inplace=True)
+Drugs.head()
+Drugs_Correlations = Drugs.corr()
+Drugs_Correlations = Drugs_Correlations.loc['Alcohol':'VSA']
+Drugs_Correlations.drop(drugs,axis=1,inplace=True)
+Drugs_Correlations.head()
+Drugs_Correlations.info()
+#Now that we have the datafame of correlations we can go ahed with the clustering based on them. 
+from sklearn.preprocessing import StandardScaler
+col = Drugs_Correlations.columns
+scaler = StandardScaler()
+Drugs_Correlations_clust = scaler.fit_transform(Drugs_Correlations)
+Drugs_Correlations_clust = pd.DataFrame(Drugs_Correlations,columns=col)
+Drugs_Correlations_clust.head()
+from sklearn.neighbors import NearestNeighbors
+from random import sample
+from numpy.random import uniform
+import numpy as np
+from math import isnan
+ 
+def hopkins(X):
+    d = X.shape[1]
+    #d = len(vars) # columns
+    n = len(X) # rows
+    m = int(0.1 * n) 
+    nbrs = NearestNeighbors(n_neighbors=1).fit(X.values)
+ 
+    rand_X = sample(range(0, n, 1), m)
+ 
+    ujd = []
+    wjd = []
+    for j in range(0, m):
+        u_dist, _ = nbrs.kneighbors(uniform(np.amin(X,axis=0),np.amax(X,axis=0),d).reshape(1, -1), 2, return_distance=True)
+        ujd.append(u_dist[0][1])
+        w_dist, _ = nbrs.kneighbors(X.iloc[rand_X[j]].values.reshape(1, -1), 2, return_distance=True)
+        wjd.append(w_dist[0][1])
+ 
+    H = sum(ujd) / (sum(ujd) + sum(wjd))
+    if isnan(H):
+        print(ujd, wjd)
+        H = 0
+ 
+    return H
+    hopkins(Drugs_Correlations_clust)
+    from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+ssd = []
+range_n_clusters = [2, 3, 4, 5, 6, 7, 8]
+for num_clusters in range_n_clusters:
+    kmeans = KMeans(n_clusters=num_clusters, max_iter=50)
+    kmeans.fit(Drugs_Correlations_clust)
+    
+    ssd.append(kmeans.inertia_)
+    
+plt.plot(ssd)
+plt.show()
+range_n_clusters = [2, 3, 4, 5, 6, 7, 8]
+
+for num_clusters in range_n_clusters:
+    
+    kmeans = KMeans(n_clusters=num_clusters, max_iter=50)
+    kmeans.fit(Drugs_Correlations_clust)
+    
+    cluster_labels = kmeans.labels_
+    
+    silhouette_avg = silhouette_score(Drugs_Correlations_clust, cluster_labels)
+    print("For n_clusters={0}, the silhouette score is {1}".format(num_clusters, silhouette_avg))
+    #Clustering the drugs inro 3 clusters
+    kmeans = KMeans(n_clusters=3,max_iter=100)
+kmeans.fit(Drugs_Correlations_clust)
+Drugs_Correlations['Cluster_ID'] = kmeans.labels_
+Drugs_Correlations.head()
+#Plotting the Clusters
+plt.figure(figsize=(20,15))
+sns.heatmap(Drugs_Correlations,annot=True)
+plt.title('Heatmap of Drug Correlations as well as the Clusters they Belong to',fontsize=20)
+plt.show()
+#Printing the Clusters
+print('Cluster 1 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 0].index))
+print('Cluster 2 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 1].index))
+print('Cluster 3 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 2].index))
+#Now we will again cluster the drugs based solely on their correlations with the Personality type variables.
+Drugs_Correlations = Drugs_Correlations[['Nscore','Escore','Oscore','AScore','Cscore','Impulsive','SS']]
+Drugs_Correlations.head()
+col = Drugs_Correlations.columns
+scaler = StandardScaler()
+Drugs_Correlations_clust = scaler.fit_transform(Drugs_Correlations)
+Drugs_Correlations_clust = pd.DataFrame(Drugs_Correlations,columns=col)
+Drugs_Correlations_clust.head()
+hopkins(Drugs_Correlations_clust)
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+ssd = []
+range_n_clusters = [2, 3, 4, 5, 6, 7, 8]
+for num_clusters in range_n_clusters:
+    kmeans = KMeans(n_clusters=num_clusters, max_iter=50)
+    kmeans.fit(Drugs_Correlations_clust)
+    
+    ssd.append(kmeans.inertia_)
+    
+plt.plot(ssd)
+plt.show()
+range_n_clusters = [2, 3, 4, 5, 6, 7, 8]
+
+for num_clusters in range_n_clusters:
+    
+    kmeans = KMeans(n_clusters=num_clusters, max_iter=50)
+    kmeans.fit(Drugs_Correlations_clust)
+    
+    cluster_labels = kmeans.labels_
+    
+    silhouette_avg = silhouette_score(Drugs_Correlations_clust, cluster_labels)
+    print("For n_clusters={0}, the silhouette score is {1}".format(num_clusters, silhouette_avg))
+    #Clustering the drugs into 3 clusters based on the personality variables. 
+    kmeans = KMeans(n_clusters=3,max_iter=100)
+kmeans.fit(Drugs_Correlations_clust)
+Drugs_Correlations['Cluster_ID'] = kmeans.labels_
+Drugs_Correlations.head()
+#Plotting the Clusters
+plt.figure(figsize=(15,10))
+sns.heatmap(Drugs_Correlations,annot=True)
+plt.title('Heatmap of Drug Correlations as well as the Clusters they belong to',fontsize=20)
+plt.show()
+plt.figure(figsize=(15,5))
+sns.scatterplot(x='Nscore',y='Escore',data=Drugs_Correlations,hue='Cluster_ID',palette='deep')
+plt.title('Extraversion vs Neuroticism vs Clusters')
+plt.xlabel('Neuroticism')
+plt.ylabel('Extraversion')
+plt.show()
+plt.figure(figsize=(15,5))
+sns.scatterplot(x='AScore',y='Cscore',data=Drugs_Correlations,hue='Cluster_ID',palette='deep')
+plt.title('Conscientiousness vs Agreeableness vs Clusters')
+plt.xlabel('Agreeableness')
+plt.ylabel('Conscientiousness')
+plt.show()
+plt.figure(figsize=(15,5))
+sns.scatterplot(x='Impulsive',y='SS',data=Drugs_Correlations,hue='Cluster_ID',palette='deep')
+plt.title('Sensation Sensing vs Impulsiveness vs Clusters')
+plt.xlabel('Impulsiveness')
+plt.ylabel('Sensation Sensing')
+plt.show()
+#Printing the Clusters
+print('Cluster 1 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 0].index))
+print('Cluster 2 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 1].index))
+print('Cluster 3 :', list(Drugs_Correlations[Drugs_Correlations.Cluster_ID == 2].index))
+#As we can see from the plots we get pretty well defined clusters.
+# END FOR NOW #
+    
